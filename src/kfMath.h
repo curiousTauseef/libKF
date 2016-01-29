@@ -3,11 +3,79 @@
 
 #include "kf.h"
 
+typedef float** kfMat_t;
+
 inline static float kfDot(float* v1, float* v2, int len)
 {
 	float d = 0;
 	for(;len--; d += v1[len] * v2[len]);
 	return d;
+}
+
+inline static void kfMatPrint(kfMat_t M, int dims)
+{
+	int maxRowLen = 0;
+
+	for(int i = 0; i < dims; ++i){
+		char buf[128] = {};
+		int row = 0;
+		for(int j = 0; j < dims; ++j){
+			int l = sprintf(buf, " %0.3f ", M[i][j]);
+			row += l;
+		}
+		if(row > maxRowLen) maxRowLen = row;
+	}
+
+	for(int i = 0; i < dims; ++i){
+		char buf[128] = {};
+		char* off = buf;
+		int thisRowLen = 0;
+
+		for(int j = 0; j < dims; ++j){
+			int chars = sprintf(off, " %0.3f ", M[i][j]);
+			off += chars;
+			thisRowLen += chars;
+		}
+
+		printf("|");
+		for(int j = 0; j < maxRowLen; ++j){
+			printf(" ");
+		}
+		printf("|\n");
+
+		printf("|%s", buf);
+		for(int j = 0; j < (maxRowLen - thisRowLen); ++j){
+			printf(" ");
+		}
+		printf("|\n");
+
+		printf("|");
+		for(int j = 0; j < maxRowLen; ++j){
+			printf(" ");
+		}
+		printf("|\n");
+	}	
+}
+
+inline static kfMat_t kfMatWithCols(float* cols, int dims)
+{
+	kfMat_t mat = malloc(sizeof(float*) * dims);
+
+	for(int i = dims; i--;){
+		mat[i] = malloc(sizeof(float) * dims);
+		memcpy(mat[i], cols + (i * dims), sizeof(float) * dims);
+	}
+
+	return mat;
+}
+
+inline static void kfMatCpy(float** R, float** M, int dims)
+{
+	for(int i = dims; i--;){
+		for(int j = dims; j--;){
+			R[i][j] = M[i][j];
+		}
+	}
 }
 
 inline static float kfMatRowCol(float** M, float** N, int row, int col, int len)

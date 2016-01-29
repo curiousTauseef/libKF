@@ -9,6 +9,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <time.h>
 #include <sys/stat.h>
 
 struct TestInfo{
@@ -20,21 +21,23 @@ struct TestInfo{
 };
 
 static inline void Log(const char* format, int isGood, ...){
-	char buf[1024];
+	char buf[1024] = {}, txt[1024] = {};
 	va_list args;
     
-    va_start(args, isGood);
-    vsnprintf(buf, (size_t)sizeof(buf), format, args);
-    va_end(args);
+	va_start(args, isGood);
+	vsnprintf(buf, (size_t)sizeof(buf), format, args);
+	va_end(args);
 
 	if(isGood){
-		printf("\t\033[0;32m%s\033[0m", buf);
+		sprintf(txt, "\t\033[0;32m%s\033[0m\n", buf);
 	}
 	else{
-		printf("\t\033[1;31m%s\033[0m", buf);	
+		sprintf(txt, "\t\033[1;31m%s\033[0m\n", buf);	
 	}
 
-    return;
+	write(1, txt, strlen(txt) + 1);
+
+	return;
 }
 
 #define TEST_BEGIN int main(int argc, const char* argv[]){\
@@ -42,6 +45,7 @@ static inline void Log(const char* format, int isGood, ...){
 	int ret = 0;\
 	int testNumber = atoi(argv[1]);\
 	int totalTests = atoi(argv[2]);\
+	srandom(time(NULL));\
 	struct TestInfo testInstance = {\
 	
 #define TEST_END };\
