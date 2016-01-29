@@ -24,7 +24,7 @@ static int test(void)
 	Log("T = ", 0);
 	kfMatPrint(cpy, 3);
 
-	Log("mat size %d, scaling...", 1, sizeof(M)); 
+	Log("mat size %d, transposing...", 1, sizeof(M)); 
 	kfMatTranspose(M, N, 3);
 	Log("Transposed", 1, NULL);
 	kfMatPrint(M, 3);

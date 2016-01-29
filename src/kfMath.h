@@ -20,7 +20,7 @@ inline static void kfMatPrint(kfMat_t M, int dims)
 		char buf[128] = {};
 		int row = 0;
 		for(int j = 0; j < dims; ++j){
-			int l = sprintf(buf, " %0.3f ", M[i][j]);
+			int l = sprintf(buf, " %0.3f ", M[j][i]);
 			row += l;
 		}
 		if(row > maxRowLen) maxRowLen = row;
@@ -32,7 +32,7 @@ inline static void kfMatPrint(kfMat_t M, int dims)
 		int thisRowLen = 0;
 
 		for(int j = 0; j < dims; ++j){
-			int chars = sprintf(off, " %0.3f ", M[i][j]);
+			int chars = sprintf(off, " %0.3f ", M[j][i]);
 			off += chars;
 			thisRowLen += chars;
 		}
@@ -57,6 +57,17 @@ inline static void kfMatPrint(kfMat_t M, int dims)
 	}	
 }
 
+inline static kfMat_t kfMatAlloc(int dims)
+{
+	kfMat_t mat = malloc(sizeof(float*) * dims);
+
+	for(int i = dims; i--;){
+		mat[i] = malloc(sizeof(float) * dims);
+	}
+
+	return mat;
+}
+
 inline static kfMat_t kfMatWithCols(float* cols, int dims)
 {
 	kfMat_t mat = malloc(sizeof(float*) * dims);
@@ -78,18 +89,11 @@ inline static void kfMatCpy(float** R, float** M, int dims)
 	}
 }
 
-inline static float kfMatRowCol(float** M, float** N, int row, int col, int len)
-{
-	float d = 0;
-	for(;len--; d += M[row][len] * N[len][row]);
-	return d;
-}
-
-inline static void kfMatScl(float** R, float s, int dims)
+inline static void kfMatScl(float** R, float** M, float s, int dims)
 {
 	for(int i = dims; i--;){
 		for(int j = dims; j--;){
-			R[i][j] *= s;
+			R[i][j] = M[i][j] * s;
 		}
 	}
 }
@@ -117,22 +121,9 @@ inline static float kfMat2Det(float** M)
 
 inline static float kfMat3Det(float** M)
 {
-	float m0[2][2] = {
-		{ M[1][1], M[1][2] },
-		{ M[2][1], M[2][2] }
-	};
-
-	float m1[2][2] = {
-		{ M[2][1], M[2][2] },
-		{ M[0][1], M[0][2] }
-	};
-	
-	float m2[2][2] = {
-		{ M[0][1], M[0][2] },
-		{ M[1][1], M[1][2] }
-	};
-
-	return M[0][0] * kfMat2Det((float**)m0) + M[1][0] * kfMat2Det((float**)m1) + M[2][0] * kfMat2Det((float**)m2);
+	return M[0][0] * (M[1][1] * M[2][2] - M[1][2] * M[2][1]) + 
+	       M[1][0] * (M[2][1] * M[0][2] - M[2][2] * M[0][1]) + 
+	       M[2][0] * (M[0][1] * M[1][2] - M[0][2] * M[1][1]);
 }
 
 inline static void kfMatIdent(float** M, int dims)
@@ -154,11 +145,20 @@ inline static void kfMatAdd(float** R, float** M, float** N, int dims)
 	}
 }
 
+inline static float kfMatRowCol(float** M, float** N, int row, int col, int len)
+{
+	float d = 0;
+	for(int i = len; i--;){
+		d += M[i][row] * N[col][i];
+	}
+	return d;
+}
+
 inline static void kfMatMul(float** R, float** M, float** N, int dims)
 {
 	for(int i = dims; i--;){
 		for(int j = dims; j--;){
-			R[i][j] = kfMatRowCol(M, N, i, j, dims);					
+			R[j][i] = kfMatRowCol(M, N, i, j, dims);
 		}
 	}
 }
@@ -168,7 +168,11 @@ inline static int kfMat2Inverse(float** R, float** M)
 	float d = kfMat2Det(M);
 	if(d == 0) return KF_UNDEFINED;
 
-	kfMatScl(R, 1.0f / d, 2);
+	R[0][0] =  M[1][1]; R[1][0] = -M[1][0];
+	R[0][1] = -M[0][1]; R[1][1] =  M[0][0];
+
+
+	kfMatScl(R, R, 1.0f / d, 2);
 
 	return 0;
 }
@@ -176,10 +180,14 @@ inline static int kfMat2Inverse(float** R, float** M)
 inline static int kfMat3Inverse(float** R, float** M)
 {
 	float d = kfMat3Det(M);
-	float t[3][3];
+	static kfMat_t t;
+	if(!t){
+		t = kfMatAlloc(3);
+	}
+
 	if(d == 0) return KF_UNDEFINED;
 
-	kfMatTranspose((float**)t, M, 3);	
+	kfMatTranspose(t, M, 3);	
 
 	R[0][0] = t[1][1] * t[2][2] - t[2][1] * t[1][2];
 	R[1][0] = t[0][1] * t[2][2] - t[2][1] * t[0][2];
@@ -190,18 +198,15 @@ inline static int kfMat3Inverse(float** R, float** M)
 	R[2][1] = t[0][0] * t[1][2] - t[1][0] * t[0][2];
 
 	R[0][2] = t[1][0] * t[2][1] - t[2][0] * t[1][1];
-	R[1][2] = t[0][0] * t[2][2] - t[2][0] * t[0][2];
+	R[1][2] = t[0][0] * t[2][1] - t[0][1] * t[2][0];
 	R[2][2] = t[0][0] * t[1][1] - t[1][0] * t[0][1];
 
 	// per element multiply with adj matrix
 	for(int i = 3; i--;){
 		for(int j = 3; j--;){
-			R[j][i] *= (i + j) % 2 ? -1 : 1;
+			R[j][i] = R[j][i] * ((i + j) % 2 ? -1 : 1) / d;
 		}
 	}
-
-	// scale matrix by inverse det, gets inverse matrix
-	kfMatScl(R, 1.0f / d, 3);
 
 	return 0;
 }

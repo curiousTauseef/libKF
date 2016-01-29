@@ -27,7 +27,7 @@ static int test(void)
 	kfMatPrint(cpy, 3);
 
 	Log("mat size %d, scaling...", 1, sizeof(M)); 
-	kfMatScl(M, s, 3);
+	kfMatScl(M, M, s, 3);
 	Log("Scaled", 1, NULL);
 	kfMatPrint(M, 3);
 
