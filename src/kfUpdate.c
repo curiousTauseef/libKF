@@ -15,8 +15,8 @@ void kfUpdate(kf_t* f, float* state, float* m)
 	};
 
 	int d = f->dims;
-	kf_epoch_t* e_1 = f->epoch + ((f->dims + 1) % 2);
-	kf_epoch_t* e_0 = f->epoch + f->dims;
+	kf_epoch_t* e_1 = f->epoch + ((f->index + 1) % 2);
+	kf_epoch_t* e_0 = f->epoch + f->index;
 
 	// H_k^T
 	kfMatTranspose(f->matTransTrans, f->matTrans, d);
@@ -45,6 +45,6 @@ void kfUpdate(kf_t* f, float* state, float* m)
 	kfMatSub(e_0->matVarCovar, e_1->matVarCovar, f->matTemp[1], d); // P_k = P_k-1 - K_k * (H_k * P_k-1) 
 
 	// roll over to the next epoch
-	++f->dims;
-	f->dims %= 2;
+	++f->index;
+	f->index %= 2;
 }

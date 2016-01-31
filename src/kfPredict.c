@@ -3,8 +3,8 @@
 
 void kfPredict(kf_t* f, float* c)
 {
-	kf_epoch_t* e_1 = f->epoch + ((f->dims + 1) % 2);
-	kf_epoch_t* e_0 = f->epoch + f->dims;
+	kf_epoch_t* e_1 = f->epoch + ((f->index + 1) % 2);
+	kf_epoch_t* e_0 = f->epoch + f->index;
 
 	// P_t = P_t-1 - K_t * H_t * P_t-1
 	kfMatMul(f->matTemp[0], f->matTrans, e_1->matVarCovar, f->dims);

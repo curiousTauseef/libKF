@@ -1,4 +1,5 @@
 #include "kf.h"
+#include "kfMath.h"
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -26,16 +27,25 @@ int kfCreateFilter(kf_t* filter, int dims)
 		e->matVarCovar = allocMat(dims, dims);
 	
 		if(!e->state || !e->matVarCovar) return KF_ERR_ALLOC;
+		
+		kfMatIdent(e->matVarCovar, dims);
 	}
 
 	filter->index = 0;
 
 	// allocate all epoch independent matrices
 	float*** mats = &filter->matStateTrans;
-	for(int i = 4; i--;){
+	for(int i = 9; i--;){
 		mats[i] = allocMat(dims, dims);
+		kfMatIdent(mats[i], dims);
 		if(!mats[i]) return KF_ERR_ALLOC;
 	}
-		
+	
+	// allocate temp vectors	
+	for(int i = 2; i--;){
+		filter->vecTemp[i] = malloc(sizeof(float) * dims);
+		if(!filter->vecTemp[i]) return KF_ERR_ALLOC;
+	}
+
 	return 0;
 }

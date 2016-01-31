@@ -19,12 +19,14 @@ typedef struct{
 	uint32_t dims;
 	uint32_t index;
 	kf_epoch_t epoch[2];   // t, t-1 [0, 1]
-	float** matStateTrans; // 'F' State transition matrix
-	float** matCtrlInput;  // 'B' Control input matrix, maps effect of
-	float** matTrans;      // 'H' Transition matrix maps measurements into the state domain
+
+	float** matStateTrans; // 'F' State transition matrix ( user defined )
+	float** matCtrlInput;  // 'B' Control input matrix, maps effect of ( user defined )
+	float** matTrans;      // 'H' Transition matrix maps measurements into the state domain ( user defined )
 	float** matTransTrans;
-	float** matMesCovars;  // 'R' Measurement covariances
-	float** matKalmanGain; // 'K' 
+	float** matMesCovars;  // 'R' Measurement covariances ( alg. defined )
+	float** matKalmanGain; // 'K'                         ( alg. defined )
+
 	float** matTemp[3]; // scratch space for whatever
 	float*  vecTemp[2]; // vector scratch space
 } kf_t;
