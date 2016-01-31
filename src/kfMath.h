@@ -2,8 +2,25 @@
 #define KALMAN_FILTER_MATH
 
 #include "kf.h"
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 typedef float** kfMat_t;
+
+inline static void kfVecAdd(float* r, float* v1, float* v2, int dims)
+{
+	for(;dims--;){
+		r[dims] = v1[dims] + v2[dims];
+	}
+}
+
+inline static void kfVecSub(float* r, float* v1, float* v2, int dims)
+{
+	for(;dims--;){
+		r[dims] = v1[dims] - v2[dims];
+	}
+}
 
 inline static float kfDot(float* v1, float* v2, int len)
 {
@@ -145,6 +162,15 @@ inline static void kfMatAdd(float** R, float** M, float** N, int dims)
 	}
 }
 
+inline static void kfMatSub(float** R, float** M, float** N, int dims)
+{
+	for(int i = dims; i--;){
+		for(int j = dims; j--;){
+			R[i][j] = M[i][j] - N[i][j];
+		}
+	}
+}
+
 inline static float kfMatRowCol(float** M, float** N, int row, int col, int len)
 {
 	float d = 0;
@@ -152,6 +178,13 @@ inline static float kfMatRowCol(float** M, float** N, int row, int col, int len)
 		d += M[i][row] * N[col][i];
 	}
 	return d;
+}
+
+inline static void kfMatMulVec(float* r, float** M, float* v, int dims)
+{
+	for(int i = dims; i--;){
+		r[i] = kfMatRowCol(M, &v, i, 0, dims);
+	}
 }
 
 inline static void kfMatMul(float** R, float** M, float** N, int dims)
@@ -163,7 +196,7 @@ inline static void kfMatMul(float** R, float** M, float** N, int dims)
 	}
 }
 
-inline static int kfMat2Inverse(float** R, float** M)
+static int kfMat2Inverse(float** R, float** M)
 {
 	float d = kfMat2Det(M);
 	if(d == 0) return KF_UNDEFINED;
@@ -177,7 +210,7 @@ inline static int kfMat2Inverse(float** R, float** M)
 	return 0;
 }
 
-inline static int kfMat3Inverse(float** R, float** M)
+static int kfMat3Inverse(float** R, float** M)
 {
 	float d = kfMat3Det(M);
 	static kfMat_t t;
@@ -210,6 +243,5 @@ inline static int kfMat3Inverse(float** R, float** M)
 
 	return 0;
 }
-
 
 #endif

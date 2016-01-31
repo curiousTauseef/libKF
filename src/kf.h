@@ -22,16 +22,20 @@ typedef struct{
 	float** matStateTrans; // 'F' State transition matrix
 	float** matCtrlInput;  // 'B' Control input matrix, maps effect of
 	float** matTrans;      // 'H' Transition matrix maps measurements into the state domain
+	float** matTransTrans;
 	float** matMesCovars;  // 'R' Measurement covariances
+	float** matKalmanGain; // 'K' 
+	float** matTemp[3]; // scratch space for whatever
+	float*  vecTemp[2]; // vector scratch space
 } kf_t;
 
 int  kfCreateFilter(kf_t* filter, int dimensions);
 
 // accepts measurement, and control vectors and
 // updates relevant matrices;
-void   kfPredict(kf_t* filter, float* measurements, float* controls);
+void kfPredict(kf_t* filter, float* controls);
 
 // returns a pointer to the most recent state vector estimate
-float* kfUpdate(kf_t* filter);
+void kfUpdate(kf_t* filter, float* state, float* measurements);
 
 #endif

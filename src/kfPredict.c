@@ -1,7 +1,7 @@
 #include "kf.h"
 #include "kfMath.h"
 
-void kfPredict(kf_t* f, float* m, float* c)
+void kfPredict(kf_t* f, float* c)
 {
 	kf_epoch_t* e_1 = f->epoch + ((f->dims + 1) % 2);
 	kf_epoch_t* e_0 = f->epoch + f->dims;
@@ -19,7 +19,4 @@ void kfPredict(kf_t* f, float* m, float* c)
 	// step of the filter
 	kfVecAdd(e_0->state, f->vecTemp[0], f->vecTemp[1], f->dims);
 
-	// roll over to the next epoch
-	++f->dims;
-	f->dims %= 2;
 }

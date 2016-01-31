@@ -10,3 +10,6 @@ all: $(OBJS)
 
 .c.o:
 	$(CC) $(FLAGS) $(INC) $(LIB) -c $< -o $@
+
+clean:
+	rm ./src/*.o
