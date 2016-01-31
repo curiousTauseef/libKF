@@ -31,3 +31,7 @@
 
 # Debug files
 *.dSYM/
+
+# Junk tool / OS files
+*.swp
+*.swo
