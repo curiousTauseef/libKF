@@ -1,7 +1,7 @@
 #include "test.h"
 #include "kf.h"
 
-static int testFilter(void)
+int test(void)
 {
 	kf_t filter = {};
 
@@ -21,5 +21,5 @@ static int testFilter(void)
 TEST_BEGIN
 	.name = "Filter Test",
 	.description = "Run the filter through a simple use case.",
-	.run = testFilter,
+	.run = test,
 TEST_END
