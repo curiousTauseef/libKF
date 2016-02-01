@@ -2,6 +2,7 @@
 #include "kfMath.h"
 
 #include <stdlib.h>
+#include <unistd.h>
 
 typedef int(*kfMatInv_f)(float**, float**);
 
@@ -9,7 +10,7 @@ int kfUpdate(kf_t* f, float* state, float* m)
 {
 	int(*inv[])(float**, float**) = {
 		NULL,
-		NULL,
+		kfMat1Inverse,
 		kfMat2Inverse,
 		kfMat3Inverse
 	};
@@ -23,9 +24,10 @@ int kfUpdate(kf_t* f, float* state, float* m)
 
 	// S_k = H_k * P_k-1 * H_k^T + R_k
 	kfMatMul(f->matTemp[1], e_1->matVarCovar, f->matTransTrans, d);
-	kfMatMul(f->matTemp[0], f->matTrans, f->matTemp[1], 3);
+	kfMatPrint(f->matTemp[1], d);
+	kfMatMul(f->matTemp[0], f->matTrans, f->matTemp[1], d);
 	kfMatAdd(f->matTemp[1], f->matTemp[0], f->matMesCovars, d);
-	
+
 	// S_k^-1
 	if(inv[d](f->matTemp[0], f->matTemp[1])){
 		return KF_UNDEFINED; // error, not invertible

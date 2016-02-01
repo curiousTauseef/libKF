@@ -41,10 +41,9 @@ static inline void Log(const char* format, int isGood, ...){
 }
 
 #define TEST_BEGIN int main(int argc, const char* argv[]){\
-	assert(argc == 3);\
 	int ret = 0;\
-	int testNumber = 0;\
-	int totalTests = 0;\
+	int testNumber = 1;\
+	int totalTests = 1;\
 	if(argc >= 3){\
 		testNumber = atoi(argv[1]);\
 		totalTests = atoi(argv[2]);\

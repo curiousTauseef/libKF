@@ -32,15 +32,23 @@ int kfCreateFilter(kf_t* filter, int dims)
 	}
 
 	filter->index = 0;
+	filter->dims  = dims;
 
 	// allocate all epoch independent matrices
 	float*** mats = &filter->matStateTrans;
-	for(int i = 9; i--;){
+	for(int i = 6; i--;){
 		mats[i] = allocMat(dims, dims);
 		kfMatIdent(mats[i], dims);
 		if(!mats[i]) return KF_ERR_ALLOC;
 	}
 	
+	// allocate temp matrices
+	for(int i = 3; i--;){
+		filter->matTemp[i] = allocMat(dims, dims);
+		kfMatIdent(filter->matTemp[i], dims);
+		if(!filter->matTemp[i]) return KF_ERR_ALLOC;
+	}
+
 	// allocate temp vectors	
 	for(int i = 2; i--;){
 		filter->vecTemp[i] = malloc(sizeof(float) * dims);

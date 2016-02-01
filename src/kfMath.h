@@ -196,6 +196,15 @@ inline static void kfMatMul(float** R, float** M, float** N, int dims)
 	}
 }
 
+static int kfMat1Inverse(float** R, float** M)
+{
+	if(M[0][0] == 0) return KF_UNDEFINED;
+
+	R[0][0] = 1.0f / M[0][0];
+
+	return 0;
+}
+
 static int kfMat2Inverse(float** R, float** M)
 {
 	float d = kfMat2Det(M);

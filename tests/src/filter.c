@@ -6,6 +6,7 @@ int test(void)
 	kf_t filter = {};
 
 	assert(!kfCreateFilter(&filter, 1));
+	Log("Filter structures allocated", 1);		
 
 	float dt = 0.01;
 	float state = 0;
