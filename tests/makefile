@@ -6,7 +6,7 @@ CXX_FLAGS=-std=c99
 MAIN=./..
 
 KF_INC = -I./../src
-KF_SRC = 
+KF_SRC = ./../src/*.c 
 
 LINK = -lm -lc
 
