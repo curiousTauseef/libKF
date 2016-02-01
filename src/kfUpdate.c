@@ -5,7 +5,7 @@
 
 typedef int(*kfMatInv_f)(float**, float**);
 
-void kfUpdate(kf_t* f, float* state, float* m)
+int kfUpdate(kf_t* f, float* state, float* m)
 {
 	int(*inv[])(float**, float**) = {
 		NULL,
@@ -28,7 +28,7 @@ void kfUpdate(kf_t* f, float* state, float* m)
 	
 	// S_k^-1
 	if(inv[d](f->matTemp[0], f->matTemp[1])){
-		return; // error, not invertible
+		return KF_UNDEFINED; // error, not invertible
 	}
 
 	// K_k = P_k-1 * H_k^T * S_k^-1
@@ -47,4 +47,6 @@ void kfUpdate(kf_t* f, float* state, float* m)
 	// roll over to the next epoch
 	++f->index;
 	f->index %= 2;
+
+	return 0;
 }

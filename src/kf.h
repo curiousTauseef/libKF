@@ -21,7 +21,7 @@ typedef struct{
 	kf_epoch_t epoch[2];   // t, t-1 [0, 1]
 
 	float** matStateTrans; // 'F' State transition matrix ( user defined )
-	float** matCtrlInput;  // 'B' Control input matrix, maps effect of ( user defined )
+	float** matCtrlInput;  // 'B' Control input matrix, maps effect of control input onto the state ( user defined )
 	float** matTrans;      // 'H' Transition matrix maps measurements into the state domain ( user defined )
 	float** matTransTrans;
 	float** matMesCovars;  // 'R' Measurement covariances ( alg. defined )
@@ -35,9 +35,9 @@ int  kfCreateFilter(kf_t* filter, int dimensions);
 
 // accepts measurement, and control vectors and
 // updates relevant matrices;
-void kfPredict(kf_t* filter, float* controls);
+int kfPredict(kf_t* filter, float* controls);
 
 // returns a pointer to the most recent state vector estimate
-void kfUpdate(kf_t* filter, float* state, float* measurements);
+int kfUpdate(kf_t* filter, float* state, float* measurements);
 
 #endif
