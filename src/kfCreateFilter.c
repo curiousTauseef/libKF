@@ -24,18 +24,18 @@ int kfCreateFilter(kf_t* filter, int dims)
 	for(int i = 2; i--;){
 		kf_epoch_t* e = filter->epoch + i;
 		e->state = (float*)malloc(sizeof(float));
-		e->matVarCovar = allocMat(dims, dims);
+		e->matP = allocMat(dims, dims);
 	
-		if(!e->state || !e->matVarCovar) return KF_ERR_ALLOC;
+		if(!e->state || !e->matP) return KF_ERR_ALLOC;
 		
-		kfMatIdent(e->matVarCovar, dims);
+		kfMatIdent(e->matP, dims);
 	}
 
 	filter->index = 0;
 	filter->dims  = dims;
 
 	// allocate all epoch independent matrices
-	float*** mats = &filter->matStateTrans;
+	float*** mats = &filter->matF;
 	for(int i = 6; i--;){
 		mats[i] = allocMat(dims, dims);
 		kfMatIdent(mats[i], dims);

@@ -12,7 +12,7 @@ enum{
 
 typedef struct{
 	float*  state;         // 'x' in most texts
-	float** matVarCovar;   // 'P' Variance and covariance matrix for each dimension
+	float** matP;   // 'P' Variance and covariance matrix for each dimension
 } kf_epoch_t;
 
 typedef struct{
@@ -20,12 +20,12 @@ typedef struct{
 	uint32_t index;
 	kf_epoch_t epoch[2];   // t, t-1 [0, 1]
 
-	float** matStateTrans; // 'F' State transition matrix ( user defined )
-	float** matCtrlInput;  // 'B' Control input matrix, maps effect of control input onto the state ( user defined )
-	float** matTrans;      // 'H' Transition matrix maps measurements into the state domain ( user defined )
-	float** matTransTrans;
-	float** matMesCovars;  // 'R' Measurement covariances ( alg. defined )
-	float** matKalmanGain; // 'K'                         ( alg. defined )
+	float** matF;   // 'F' State transition matrix ( user defined )
+	float** matB;   // 'B' Control input matrix, maps effect of control input onto the state ( user defined )
+	float** matH;   // 'H' Transition matrix maps measurements into the state domain ( user defined )
+	float** matH_T;
+	float** matR;   // 'R' Measurement covariances ( alg. defined )
+	float** matK;   // 'K'                         ( alg. defined )
 
 	float** matTemp[3]; // scratch space for whatever
 	float*  vecTemp[2]; // vector scratch space

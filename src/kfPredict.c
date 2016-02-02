@@ -9,15 +9,25 @@ int kfPredict(kf_t* f, float* c)
 	kf_epoch_t* e_0 = f->epoch + f->index;
 
 	// P_t = P_t-1 - K_t * H_t * P_t-1
-	kfMatMul(f->matTemp[0], f->matTrans, e_1->matVarCovar, f->dims);
-	kfMatMul(f->matTemp[1], f->matKalmanGain, f->matTemp[0], f->dims);
-	kfMatSub(e_0->matVarCovar, e_1->matVarCovar, f->matTemp[1], f->dims);
+	// kfMatMul(f->matTemp[0], f->matH, e_1->matP, f->dims);
+	// kfMatMul(f->matTemp[1], f->matK, f->matTemp[0], f->dims);
+	// kfMatSub(e_1->matP, e_1->matP, f->matTemp[1], f->dims);
+
+	// P_t-1 =  (F_t * (P_t-1 * F_t^T)_ + Q_t
+	kfMatTranspose(f->matTemp[0], f->matF, f->dims);
+	kfMatMul(f->matTemp[1], e_1->matP, f->matTemp[0], f->dims);
+	kfMatMul(f->matTemp[0], f->matF, f->matTemp[1], f->dims);
+	kfMatCpy(e_1->matP, f->matTemp[0], f->dims);
+
+	// kfMatMul(f->matTemp[1], f->matK, f->matTemp[0], f->dims);
+	// kfMatSub(e_1->matP, e_1->matP, f->matTemp[1], f->dims);
+
 
 	// update x_hat estimation for the last epoch
-	kfMatMulVec(f->vecTemp[0], f->matStateTrans, e_1->state, f->dims);
+	kfMatMulVec(f->vecTemp[0], f->matF, e_1->state, f->dims);
 
 	if(c){
-		kfMatMulVec(f->vecTemp[1], f->matCtrlInput, c, f->dims); 
+		kfMatMulVec(f->vecTemp[1], f->matB, c, f->dims); 
 	}
 	else{
 		bzero(f->vecTemp[1], sizeof(float) * f->dims);
@@ -25,7 +35,7 @@ int kfPredict(kf_t* f, float* c)
 
 	// update the system state estimate that will be used in the update
 	// step of the filter
-	kfVecAdd(e_0->state, f->vecTemp[0], f->vecTemp[1], f->dims);
+	kfVecAdd(e_1->state, f->vecTemp[0], f->vecTemp[1], f->dims);
 
 	return 0;
 }
