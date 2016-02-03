@@ -8,14 +8,14 @@ def getTestList():
 			tests.append("./bin/" + file)
 	return tests
 
-print "\n"
+print("\n")
 
 testNames = getTestList()
 testsPassed = 0
 testsRan = 0
 
 for file in testNames:
-	print file
+	print(file)
 	ret = subprocess.call([file, str(testsRan), str(len(testNames))])
 
 	if not ret:
@@ -29,5 +29,5 @@ status = "\033[0;32m"
 if testsPassed != len(testNames):
 	status = "\033[1;31m"
 
-print str(testsRan) + " of " + str(len(testNames)) + " ran"
-print status + str(testsPassed) + " of " + str(len(testNames)) + " passed\033[0m"
+print(str(testsRan) + " of " + str(len(testNames)) + " ran")
+print(status + str(testsPassed) + " of " + str(len(testNames)) + " passed\033[0m")

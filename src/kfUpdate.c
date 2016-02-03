@@ -4,11 +4,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-typedef int(*kfMatInv_f)(float**, float**);
+typedef int(*kfMatInv_f)(float**, float**, float**);
 
 int kfUpdate(kf_t* f, float* state, float* m)
 {
-	int(*inv[])(float**, float**) = {
+	int(*inv[])(float**, float**, float**) = {
 		NULL,
 		kfMat1Inverse,
 		kfMat2Inverse,
@@ -29,7 +29,7 @@ int kfUpdate(kf_t* f, float* state, float* m)
 	kfMatAdd(f->matTemp[1], f->matTemp[0], f->matR, d);
 
 	// S_t^-1
-	if(inv[d](f->matTemp[0], f->matTemp[1])){
+	if(inv[d](f->matTemp[0], f->matTemp[1], f->matTemp[2])){
 		return KF_UNDEFINED; // error, not invertible
 	}
 

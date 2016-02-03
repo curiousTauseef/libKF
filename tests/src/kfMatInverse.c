@@ -16,13 +16,14 @@ static int test(void)
 	};
 
 	kfMat_t N = kfMatWithCols((float*)N_temp, 2);
+	kfMat_t N_T = kfMatWithCols((float*)N_temp, 2);
 	kfMat_t N_inv = kfMatWithCols((float*)N_inv_temp, 2);
 
 	kfMatPrint(N, 2);
 	Log(" N^-1 ", 0);
 	kfMatPrint(N_inv, 2);
 	Log("mat size %d, inverting...", 1, sizeof(N)); 
-	kfMat2Inverse(N_inv, N);
+	kfMat2Inverse(N_inv, N, N_T);
 	kfMatPrint(N_inv, 2);
 
 	for(int i = 2; i--;){
@@ -45,13 +46,14 @@ static int test(void)
 
 	kfMat_t I = kfMatWithCols((float*)M_temp, 3);
 	kfMat_t M = kfMatWithCols((float*)M_temp, 3);
+	kfMat_t M_T = kfMatWithCols((float*)M_temp, 3);
 	kfMat_t M_inv = kfMatWithCols((float*)M_inv_temp, 3);
 
 	kfMatPrint(M, 3);
 	Log(" M^-1 ", 0);
 	kfMatPrint(M_inv, 3);
 	Log("mat size %d, inverting...", 1, sizeof(M)); 
-	kfMat3Inverse(M_inv, M);
+	kfMat3Inverse(M_inv, M, M_T);
 	kfMatPrint(M_inv, 3);
 
 	for(int i = 3; i--;){
