@@ -6,22 +6,12 @@
 int kfPredict(kf_t* f, float* c)
 {
 	kf_epoch_t* e_1 = f->epoch + ((f->index + 1) % 2);
-	kf_epoch_t* e_0 = f->epoch + f->index;
-
-	// P_t = P_t-1 - K_t * H_t * P_t-1
-	// kfMatMul(f->matTemp[0], f->matH, e_1->matP, f->dims);
-	// kfMatMul(f->matTemp[1], f->matK, f->matTemp[0], f->dims);
-	// kfMatSub(e_1->matP, e_1->matP, f->matTemp[1], f->dims);
 
 	// P_t-1 =  (F_t * (P_t-1 * F_t^T)_ + Q_t
 	kfMatTranspose(f->matTemp[0], f->matF, f->dims);
 	kfMatMul(f->matTemp[1], e_1->matP, f->matTemp[0], f->dims);
 	kfMatMul(f->matTemp[0], f->matF, f->matTemp[1], f->dims);
 	kfMatCpy(e_1->matP, f->matTemp[0], f->dims);
-
-	// kfMatMul(f->matTemp[1], f->matK, f->matTemp[0], f->dims);
-	// kfMatSub(e_1->matP, e_1->matP, f->matTemp[1], f->dims);
-
 
 	// update x_hat estimation for the last epoch
 	kfMatMulVec(f->vecTemp[0], f->matF, e_1->state, f->dims);
