@@ -10,13 +10,13 @@ OBJS=$(SRC:.c=.o)
 all: library
 
 install: library
-	cp ./libkf.so /usr/local/lib/
+	cp ./libKF.so /usr/local/lib/
 	echo "#define KALMAN_BIG_HEADER" > kf.h
-	cat $(COMP_HDR) >> kf.h	
+	cat $(COMP_HDR) >> kf.h
 	mv ./kf.h /usr/local/include/
 
 library: $(OBJS)
-	gcc -shared -o libkf.so $(OBJS)
+	gcc -shared -o libKF.so $(OBJS)
 
 .PHONY: header
 header:

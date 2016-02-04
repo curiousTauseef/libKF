@@ -31,13 +31,21 @@ typedef struct{
 	float*  vecTemp[2]; // vector scratch space
 } kf_t;
 
-int  kfCreateFilter(kf_t* filter, int dimensions);
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern int kfCreateFilter(kf_t* filter, int dimensions);
 
 // accepts measurement, and control vectors and
 // updates relevant matrices;
-int kfPredict(kf_t* filter, float* controls);
+extern int kfPredict(kf_t* filter, float* controls);
 
 // returns a pointer to the most recent state vector estimate
-int kfUpdate(kf_t* filter, float* state, float* measurements);
+extern int kfUpdate(kf_t* filter, float* state, float* measurements);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
