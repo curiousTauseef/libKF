@@ -24,7 +24,6 @@ int kfUpdate(kf_t* f, float* state, float* m)
 
 	// S_t = H_t * P_t-1 * H_t^T + R_t
 	kfMatMul(f->matTemp[1], e_1->matP, f->matH_T, d);
-	kfMatPrint(f->matTemp[1], d);
 	kfMatMul(f->matTemp[0], f->matH, f->matTemp[1], d);
 	kfMatAdd(f->matTemp[1], f->matTemp[0], f->matR, d);
 
