@@ -12,7 +12,7 @@ static float** allocMat(int cols, int rows)
 	for(int i = cols; i--;){
 		mat[i] = (float*)malloc(sizeof(float) * rows);
 		if(!mat[i]) return NULL;
-	}		
+	}
 
 	return mat;
 }
@@ -25,9 +25,9 @@ int kfCreateFilter(kf_t* filter, int dims)
 		kf_epoch_t* e = filter->epoch + i;
 		e->state = (float*)malloc(sizeof(float));
 		e->matP = allocMat(dims, dims);
-	
+
 		if(!e->state || !e->matP) return KF_ERR_ALLOC;
-		
+
 		kfMatIdent(e->matP, dims);
 	}
 
@@ -36,12 +36,12 @@ int kfCreateFilter(kf_t* filter, int dims)
 
 	// allocate all epoch independent matrices
 	float*** mats = &filter->matF;
-	for(int i = 6; i--;){
+	for(int i = 0; (void*)(mats + i) != (void*)filter->matTemp; ++i){
 		mats[i] = allocMat(dims, dims);
 		kfMatIdent(mats[i], dims);
 		if(!mats[i]) return KF_ERR_ALLOC;
 	}
-	
+
 	// allocate temp matrices
 	for(int i = 3; i--;){
 		filter->matTemp[i] = allocMat(dims, dims);
@@ -49,7 +49,7 @@ int kfCreateFilter(kf_t* filter, int dims)
 		if(!filter->matTemp[i]) return KF_ERR_ALLOC;
 	}
 
-	// allocate temp vectors	
+	// allocate temp vectors
 	for(int i = 2; i--;){
 		filter->vecTemp[i] = malloc(sizeof(float) * dims);
 		if(!filter->vecTemp[i]) return KF_ERR_ALLOC;

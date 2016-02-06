@@ -67,7 +67,7 @@ void kfMatPrint(kfMat_t M,int dims)
 			printf(" ");
 		}
 		printf("|\n");
-	}	
+	}
 }
 
 kfMat_t kfMatAlloc(int dims)
@@ -124,7 +124,7 @@ float kfMat2SubDet(float** M,int colOff,int rowOff,int dims)
 {
 	int colOff1 = (colOff + 1) % dims;
 	int rowOff1 = (rowOff + 1) % dims;
-	return M[colOff][rowOff] * M[colOff1][rowOff1] - M[colOff1][rowOff] * M[colOff][rowOff1]; 
+	return M[colOff][rowOff] * M[colOff1][rowOff1] - M[colOff1][rowOff] * M[colOff][rowOff1];
 }
 
 float kfMat2Det(float** M)
@@ -134,8 +134,8 @@ float kfMat2Det(float** M)
 
 float kfMat3Det(float** M)
 {
-	return M[0][0] * (M[1][1] * M[2][2] - M[1][2] * M[2][1]) + 
-	       M[1][0] * (M[2][1] * M[0][2] - M[2][2] * M[0][1]) + 
+	return M[0][0] * (M[1][1] * M[2][2] - M[1][2] * M[2][1]) +
+	       M[1][0] * (M[2][1] * M[0][2] - M[2][2] * M[0][1]) +
 	       M[2][0] * (M[0][1] * M[1][2] - M[0][2] * M[1][1]);
 }
 
@@ -220,7 +220,7 @@ int kfMat3Inverse(float** R, float** M, float** t)
 	float d = kfMat3Det(M);
 	if(d == 0) return KF_UNDEFINED;
 
-	kfMatTranspose(t, M, 3);	
+	kfMatTranspose(t, M, 3);
 
 	R[0][0] = t[1][1] * t[2][2] - t[2][1] * t[1][2];
 	R[1][0] = t[0][1] * t[2][2] - t[2][1] * t[0][2];

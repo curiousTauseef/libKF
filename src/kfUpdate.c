@@ -6,7 +6,7 @@
 
 typedef int(*kfMatInv_f)(float**, float**, float**);
 
-int kfUpdate(kf_t* f, float* state, float* m)
+int kfUpdate(kf_t* f, float* state, float* z)
 {
 	int(*inv[])(float**, float**, float**) = {
 		NULL,
@@ -36,17 +36,18 @@ int kfUpdate(kf_t* f, float* state, float* m)
 	kfMatMul(f->matTemp[1], f->matH_T, f->matTemp[0], d);
 	kfMatMul(f->matK, e_1->matP, f->matTemp[1], d);
 
-	// X_t = X_t-1 + K_t * z_t	
+	// X_t = X_t-1 + K_t * (z - H_t-1 * X_t-1)
 	kfMatMulVec(f->vecTemp[0], f->matH, e_1->state, d);
-	kfVecSub(f->vecTemp[1], m, f->vecTemp[0], d);
+	kfVecSub(f->vecTemp[1], z, f->vecTemp[0], d);
 	kfMatMulVec(f->vecTemp[0], f->matK, f->vecTemp[1], d);
 	kfVecAdd(e_0->state, e_1->state, f->vecTemp[0], d);
 	for(int i = d; i--; state[i] = e_0->state[i]);
 
 	// update the covariance matrix for this epoch
-	kfMatMul(f->matTemp[0], f->matH, e_1->matP, d);      // H_t * P_t-1
-	kfMatMul(f->matTemp[1], f->matK, f->matTemp[0], d);    // K_t * (H_t * P_t-1)
-	kfMatSub(e_0->matP, e_1->matP, f->matTemp[1], d); // P_t = P_t-1 - K_t * (H_t * P_t-1) 
+	// P_t = P_t-1 - K_t * H_t * P_t-1
+	kfMatMul(f->matTemp[0], f->matH, e_1->matP, d);     // H_t * P_t-1
+	kfMatMul(f->matTemp[1], f->matK, f->matTemp[0], d); // K_t * (H_t * P_t-1)
+	kfMatSub(e_0->matP, e_1->matP, f->matTemp[1], d);   // P_t = P_t-1 - K_t * (H_t * P_t-1)
 
 	// roll over to the next epoch
 	++f->index;
