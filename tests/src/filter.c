@@ -70,7 +70,7 @@ int test(void)
 	int topLeft[2] = { 5, 2 };
 	int bottomRight[2] = { IC_TERM_WIDTH - 5, IC_TERM_HEIGHT - 2};
 
-	int minMax[2] = { -600, 600 };
+	int minMax[2] = { -200, 200 };
 
 	while(1 || fabs(dx) > 0.00001){
 		float reading = (sin( t ) * target) + noise();
@@ -99,7 +99,7 @@ int test(void)
 		icTextf(5, 6, "X = { %f, %f }", state[0], state[1]);
 
 		si %= 100;
-		t += 0.01;
+		t += 0.1;
 
 		icPresent();
 		usleep(10000);

@@ -8,7 +8,7 @@ MAIN=./..
 KF_INC = -I./../src
 KF_SRC = ./../src/*.c
 
-LINK = -lm -lc -lkf -lindicurses -lncurses
+LINK = -lm -lc -lKF -lindicurses -lncurses
 
 TST_SRC=./src/*.c
 
