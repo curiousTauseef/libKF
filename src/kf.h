@@ -11,8 +11,13 @@ enum{
 } kf_err;
 
 typedef struct{
+   int cols, rows;
+   float** col;
+} kfMat_t;
+
+typedef struct{
 	float*  state; // 'x' in most texts
-	float** matP;  // 'P' Variance and covariance matrix for each dimension
+	kfMat_t matP;  // 'P' Variance and covariance matrix for each dimension
 } kf_epoch_t;
 
 typedef struct{
@@ -20,16 +25,16 @@ typedef struct{
 	uint32_t index;
 	kf_epoch_t epoch[2];   // t, t-1 [0, 1]
 
-	float** matF;   // 'F' State transition matrix ( user defined )
-	float** matB;   // 'B' Control input matrix, maps effect of control input onto the state ( user defined )
-	float** matH;   // 'H' Transformation matrix maps measurements into the state domain ( user defined )
-	float** matH_T;
-	float** matQ;   // 'Q' Process covariance      ( user defined )
-	float** matR;   // 'R' Measurement covariances ( user defined )
-	float** matK;   // 'K'                         ( alg. defined )
+	kfMat_t matF;   // 'F' State transition matrix ( user defined )
+	kfMat_t matB;   // 'B' Control input matrix, maps effect of control input onto the state ( user defined )
+	kfMat_t matH;   // 'H' Transformation matrix maps measurements into the state domain ( user defined )
+	kfMat_t matH_T;
+	kfMat_t matQ;   // 'Q' Process covariance      ( user defined )
+	kfMat_t matR;   // 'R' Measurement covariances ( user defined )
+	kfMat_t matK;   // 'K'                         ( alg. defined )
 
 
-	float** matTemp[3]; // scratch space for whatever
+	kfMat_t matTemp[3]; // scratch space for whatever
 	float*  vecTemp[2]; // vector scratch space
 } kf_t;
 

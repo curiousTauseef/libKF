@@ -4,17 +4,28 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-static float** allocMat(int cols, int rows)
+static kfMat_t allocMat(int cols, int rows)
 {
-	float** mat = (float**)malloc(sizeof(float*) * cols);
-	if(!mat) return NULL;
+	kfMat_t M = {
+		.cols = cols,
+		.rows = rows,
+		.col = (float**)malloc(sizeof(float*) * cols)
+	};
 
-	for(int i = cols; i--;){
-		mat[i] = (float*)malloc(sizeof(float) * rows);
-		if(!mat[i]) return NULL;
+	if(!M.col){
+		bzero(&M, sizeof(kfMat_t));
+		return M;
 	}
 
-	return mat;
+	for(int i = cols; i--;){
+		M.col[i] = (float*)malloc(sizeof(float) * rows);
+		if(!M.col[i]){
+			bzero(&M, sizeof(kfMat_t));
+			return M;
+		}
+	}
+
+	return M;
 }
 
 int kfCreateFilter(kf_t* filter, int dims)
@@ -23,30 +34,30 @@ int kfCreateFilter(kf_t* filter, int dims)
 	// for the two recursive time epochs
 	for(int i = 2; i--;){
 		kf_epoch_t* e = filter->epoch + i;
-		e->state = (float*)malloc(sizeof(float));
+		e->state = (float*)malloc(sizeof(float) * dims);
 		e->matP = allocMat(dims, dims);
 
-		if(!e->state || !e->matP) return KF_ERR_ALLOC;
+		if(!e->state || !e->matP.col) return KF_ERR_ALLOC;
 
-		kfMatIdent(e->matP, dims);
+		kfMatIdent(e->matP);
 	}
 
 	filter->index = 0;
 	filter->dims  = dims;
 
 	// allocate all epoch independent matrices
-	float*** mats = &filter->matF;
+	kfMat_t* mats = &filter->matF;
 	for(int i = 0; (void*)(mats + i) != (void*)filter->matTemp; ++i){
 		mats[i] = allocMat(dims, dims);
-		kfMatIdent(mats[i], dims);
-		if(!mats[i]) return KF_ERR_ALLOC;
+		kfMatIdent(mats[i]);
+		if(!mats[i].col) return KF_ERR_ALLOC;
 	}
 
 	// allocate temp matrices
 	for(int i = 3; i--;){
 		filter->matTemp[i] = allocMat(dims, dims);
-		kfMatIdent(filter->matTemp[i], dims);
-		if(!filter->matTemp[i]) return KF_ERR_ALLOC;
+		kfMatIdent(filter->matTemp[i]);
+		if(!filter->matTemp[i].col) return KF_ERR_ALLOC;
 	}
 
 	// allocate temp vectors

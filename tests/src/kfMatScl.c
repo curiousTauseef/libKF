@@ -17,25 +17,25 @@ static int test(void)
 		{ M_temp[2][0] * s, M_temp[2][1] * s, M_temp[2][2] * s},
 	};
 
-	kfMat_t M   = kfMatWithCols((float*)M_temp, 3);
-	kfMat_t cpy = kfMatWithCols((float*)cpy_temp, 3);
+	kfMat_t M   = kfMatWithCols((float*)M_temp, 3, 3);
+	kfMat_t cpy = kfMatWithCols((float*)cpy_temp, 3, 3);
 
 	// kfMatCpy()
-	
-	kfMatPrint(M, 3);
-	Log(" * %f = ", 0, s);
-	kfMatPrint(cpy, 3);
 
-	Log("mat size %d, scaling...", 1, sizeof(M)); 
-	kfMatScl(M, M, s, 3);
+	kfMatPrint(M);
+	Log(" * %f = ", 0, s);
+	kfMatPrint(cpy);
+
+	Log("mat size %d, scaling...", 1, sizeof(M));
+	kfMatScl(M, M, s);
 	Log("Scaled", 1, NULL);
-	kfMatPrint(M, 3);
+	kfMatPrint(M);
 
 	for(int i = 3; i--;){
 		for(int j = 3; j--;){
-			float truth = cpy[i][j];
-			if(truth != M[i][j]){
-				assert(M[i][j] == truth);
+			float truth = cpy.col[i][j];
+			if(truth != M.col[i][j]){
+				assert(M.col[i][j] == truth);
 			}
 		}
 	}

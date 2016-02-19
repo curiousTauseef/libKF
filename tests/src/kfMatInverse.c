@@ -15,20 +15,20 @@ static int test(void)
 		{  3, -4 },
 	};
 
-	kfMat_t N = kfMatWithCols((float*)N_temp, 2);
-	kfMat_t N_T = kfMatWithCols((float*)N_temp, 2);
-	kfMat_t N_inv = kfMatWithCols((float*)N_inv_temp, 2);
+	kfMat_t N = kfMatWithCols((float*)N_temp, 2, 2);
+	kfMat_t N_T = kfMatWithCols((float*)N_temp, 2, 2);
+	kfMat_t N_inv = kfMatWithCols((float*)N_inv_temp, 2, 2);
 
-	kfMatPrint(N, 2);
+	kfMatPrint(N);
 	Log(" N^-1 ", 0);
-	kfMatPrint(N_inv, 2);
-	Log("mat size %d, inverting...", 1, sizeof(N)); 
+	kfMatPrint(N_inv);
+	Log("mat size %d, inverting...", 1, sizeof(N));
 	kfMat2Inverse(N_inv, N, N_T);
-	kfMatPrint(N_inv, 2);
+	kfMatPrint(N_inv);
 
 	for(int i = 2; i--;){
 		for(int j = 2; j--;){
-			if(N_inv[i][j] != N_inv_temp[i][j]) return -1;
+			if(N_inv.col[i][j] != N_inv_temp[i][j]) return -1;
 		}
 	}
 
@@ -44,36 +44,36 @@ static int test(void)
 		{   5,  -4,  1 },
 	};
 
-	kfMat_t I = kfMatWithCols((float*)M_temp, 3);
-	kfMat_t M = kfMatWithCols((float*)M_temp, 3);
-	kfMat_t M_T = kfMatWithCols((float*)M_temp, 3);
-	kfMat_t M_inv = kfMatWithCols((float*)M_inv_temp, 3);
+	kfMat_t I = kfMatWithCols((float*)M_temp, 3, 3);
+	kfMat_t M = kfMatWithCols((float*)M_temp, 3, 3);
+	kfMat_t M_T = kfMatWithCols((float*)M_temp, 3, 3);
+	kfMat_t M_inv = kfMatWithCols((float*)M_inv_temp, 3, 3);
 
-	kfMatPrint(M, 3);
+	kfMatPrint(M);
 	Log(" M^-1 ", 0);
-	kfMatPrint(M_inv, 3);
-	Log("mat size %d, inverting...", 1, sizeof(M)); 
+	kfMatPrint(M_inv);
+	Log("mat size %d, inverting...", 1, sizeof(M));
 	kfMat3Inverse(M_inv, M, M_T);
-	kfMatPrint(M_inv, 3);
+	kfMatPrint(M_inv);
 
 	for(int i = 3; i--;){
 		for(int j = 3; j--;){
-			if(M_inv[i][j] != M_inv_temp[i][j]) return -2;
+			if(M_inv.col[i][j] != M_inv_temp[i][j]) return -2;
 		}
 	}
 
 	Log("Testing multiplication and correctness of 3x3 inversion", 1);
-	kfMatMul(I, M, M_inv, 3);
+	kfMatMul(I, M, M_inv);
 	Log("Mul result", 1);
-	kfMatPrint(I, 3);
+	kfMatPrint(I);
 
 	// assert that I is indeed the identitity
 	for(int i = 3; i--;){
 		for(int j = 3; j--;){
 			if(i == j){
-				if(I[i][j] != 1) return -3;
+				if(I.col[i][j] != 1) return -3;
 			}
-			else if(I[i][j] != 0) return -4;
+			else if(I.col[i][j] != 0) return -4;
 		}
 	}
 

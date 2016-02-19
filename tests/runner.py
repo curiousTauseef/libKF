@@ -8,17 +8,20 @@ def getTestList():
 			tests.append("./bin/" + file)
 	return tests
 
-print("\n")
-
 testNames = getTestList()
 testsPassed = 0
 testsRan = 0
 
+def runTest(file):
+	return subprocess.call([file, str(testsRan), str(len(testNames))])
+
+print("\n")
+
 for file in testNames:
 	print(file)
-	ret = subprocess.call([file, str(testsRan), str(len(testNames))])
+	errored = runTest(file)
 
-	if not ret:
+	if not errored:
 		testsPassed += 1
 
 	testsRan += 1

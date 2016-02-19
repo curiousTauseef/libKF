@@ -16,22 +16,22 @@ static int test(void)
 		{ M_temp[0][2], M_temp[1][2], M_temp[2][2]},
 	};
 
-	kfMat_t M   = kfMatWithCols((float*)M_temp, 3);
-	kfMat_t N   = kfMatWithCols((float*)M_temp, 3);
-	kfMat_t cpy = kfMatWithCols((float*)cpy_temp, 3);
+	kfMat_t M   = kfMatWithCols((float*)M_temp, 3, 3);
+	kfMat_t N   = kfMatWithCols((float*)M_temp, 3, 3);
+	kfMat_t cpy = kfMatWithCols((float*)cpy_temp, 3, 3);
 
-	kfMatPrint(M, 3);
+	kfMatPrint(M);
 	Log("T = ", 0);
-	kfMatPrint(cpy, 3);
+	kfMatPrint(cpy);
 
-	Log("mat size %d, transposing...", 1, sizeof(M)); 
-	kfMatTranspose(M, N, 3);
+	Log("mat size %d, transposing...", 1, sizeof(M));
+	kfMatTranspose(M, N);
 	Log("Transposed", 1, NULL);
-	kfMatPrint(M, 3);
+	kfMatPrint(M);
 
 	for(int i = 3; i--;){
 		for(int j = 3; j--;){
-			assert(cpy_temp[i][j] == M[i][j]);
+			assert(cpy_temp[i][j] == M.col[i][j]);
 		}
 	}
 
