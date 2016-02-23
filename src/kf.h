@@ -11,7 +11,7 @@ enum{
 } kf_err;
 
 typedef struct{
-   int cols, rows;
+   int8_t cols, rows;
    float** col;
 } kfMat_t;
 
