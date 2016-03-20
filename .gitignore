@@ -20,6 +20,10 @@
 *.so.*
 *.dylib
 
+# Project specific
+lib/*.so
+include/*.h
+
 # Executables
 *.exe
 *.out
