@@ -15,6 +15,7 @@ extern "C" {
 
 extern void kfVecAdd(float* r, float* v1, float* v2, int dims);
 extern void kfVecSub(float* r, float* v1, float* v2, int dims);
+extern void kfVecCross(float* r, float* v1, float* v2, int dims);
 extern float kfDot(float* v1, float* v2, int len);
 extern void kfMatPrint(kfMat_t M);
 extern kfMat_t kfMatAlloc(int cols, int rows);

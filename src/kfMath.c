@@ -10,21 +10,28 @@ void kfVecAdd(float* r, float* v1, float* v2,int dims)
 		r[dims] = v1[dims] + v2[dims];
 	}
 }
-
+//-----------------------------------------------------------------------------
 void kfVecSub(float* r, float* v1, float* v2,int dims)
 {
 	for(;dims--;){
 		r[dims] = v1[dims] - v2[dims];
 	}
 }
-
+//-----------------------------------------------------------------------------
+void kfVecCross(float* r, float* v1, float* v2, int dims)
+{
+	r[0] = v1[1] * v2[2] - v1[2] * v2[1];
+	r[1] = v1[2] * v2[0] - v1[0] * v2[2];
+	r[2] = v1[0] * v2[1] - v1[1] * v2[0];
+}
+//-----------------------------------------------------------------------------
 float kfDot(float* v1, float* v2,int len)
 {
 	float d = 0;
 	for(;len--; d += v1[len] * v2[len]);
 	return d;
 }
-
+//-----------------------------------------------------------------------------
 void kfMatPrint(kfMat_t M)
 {
 	int maxRowLen = 0;
@@ -69,7 +76,7 @@ void kfMatPrint(kfMat_t M)
 		printf("|\n");
 	}
 }
-
+//-----------------------------------------------------------------------------
 kfMat_t kfMatAlloc(int cols, int rows)
 {
 	kfMat_t mat = {
@@ -83,7 +90,7 @@ kfMat_t kfMatAlloc(int cols, int rows)
 
 	return mat;
 }
-
+//-----------------------------------------------------------------------------
 kfMat_t kfMatWithCols(float* col, int cols, int rows)
 {
 	kfMat_t mat = {
@@ -98,7 +105,7 @@ kfMat_t kfMatWithCols(float* col, int cols, int rows)
 
 	return mat;
 }
-
+//-----------------------------------------------------------------------------
 void kfMatCpy(kfMat_t R, kfMat_t M)
 {
 	for(int i = R.cols; i--;){
@@ -107,7 +114,7 @@ void kfMatCpy(kfMat_t R, kfMat_t M)
 		}
 	}
 }
-
+//-----------------------------------------------------------------------------
 void kfMatScl(kfMat_t R, kfMat_t M, float s)
 {
 	for(int i = R.cols; i--;){
@@ -116,7 +123,7 @@ void kfMatScl(kfMat_t R, kfMat_t M, float s)
 		}
 	}
 }
-
+//-----------------------------------------------------------------------------
 void kfMatTranspose(kfMat_t R, kfMat_t M)
 {
 	for(int i = R.cols; i--;){
@@ -125,26 +132,26 @@ void kfMatTranspose(kfMat_t R, kfMat_t M)
 		}
 	}
 }
-
+//-----------------------------------------------------------------------------
 float kfMat2SubDet(kfMat_t M,int colOff,int rowOff)
 {
 	int colOff1 = (colOff + 1) % M.cols;
 	int rowOff1 = (rowOff + 1) % M.rows;
 	return M.col[colOff][rowOff] * M.col[colOff1][rowOff1] - M.col[colOff1][rowOff] * M.col[colOff][rowOff1];
 }
-
+//-----------------------------------------------------------------------------
 float kfMat2Det(kfMat_t M)
 {
 	return M.col[0][0] * M.col[1][1] - M.col[1][0] * M.col[0][1];
 }
-
+//-----------------------------------------------------------------------------
 float kfMat3Det(kfMat_t M)
 {
 	return M.col[0][0] * (M.col[1][1] * M.col[2][2] - M.col[1][2] * M.col[2][1]) +
 	       M.col[1][0] * (M.col[2][1] * M.col[0][2] - M.col[2][2] * M.col[0][1]) +
 	       M.col[2][0] * (M.col[0][1] * M.col[1][2] - M.col[0][2] * M.col[1][1]);
 }
-
+//-----------------------------------------------------------------------------
 void kfMatIdent(kfMat_t M)
 {
 	for(int i = M.cols; i--;){
@@ -154,7 +161,7 @@ void kfMatIdent(kfMat_t M)
 		}
 	}
 }
-
+//-----------------------------------------------------------------------------
 void kfMatAdd(kfMat_t R, kfMat_t M, kfMat_t N)
 {
 	for(int i = R.cols; i--;){
@@ -163,7 +170,7 @@ void kfMatAdd(kfMat_t R, kfMat_t M, kfMat_t N)
 		}
 	}
 }
-
+//-----------------------------------------------------------------------------
 void kfMatSub(kfMat_t R, kfMat_t M, kfMat_t N)
 {
 	for(int i = R.cols; i--;){
@@ -172,8 +179,8 @@ void kfMatSub(kfMat_t R, kfMat_t M, kfMat_t N)
 		}
 	}
 }
-
- float kfMatRowCol(kfMat_t M, kfMat_t N,int row,int col,int len)
+//-----------------------------------------------------------------------------
+float kfMatRowCol(kfMat_t M, kfMat_t N,int row,int col,int len)
 {
 	float d = 0;
 	for(int i = len; i--;){
@@ -181,6 +188,7 @@ void kfMatSub(kfMat_t R, kfMat_t M, kfMat_t N)
 	}
 	return d;
 }
+//-----------------------------------------------------------------------------
 // TODO continue from here
 void kfMatMulVec(float* r, kfMat_t M, float* v,int dims)
 {
@@ -194,7 +202,7 @@ void kfMatMulVec(float* r, kfMat_t M, float* v,int dims)
 		r[i] = kfMatRowCol(M, vec, i, 0, dims);
 	}
 }
-
+//-----------------------------------------------------------------------------
 void kfMatMul(kfMat_t R, kfMat_t M, kfMat_t N)
 {
 	for(int i = M.rows; i--;){
@@ -203,7 +211,7 @@ void kfMatMul(kfMat_t R, kfMat_t M, kfMat_t N)
 		}
 	}
 }
-
+//-----------------------------------------------------------------------------
 int kfMat1Inverse(kfMat_t R, kfMat_t M, kfMat_t t)
 {
 	if(M.col[0][0] == 0) return KF_UNDEFINED;
@@ -212,7 +220,7 @@ int kfMat1Inverse(kfMat_t R, kfMat_t M, kfMat_t t)
 
 	return 0;
 }
-
+//-----------------------------------------------------------------------------
 int kfMat2Inverse(kfMat_t R, kfMat_t M, kfMat_t t)
 {
 	float d = kfMat2Det(M);
@@ -225,7 +233,7 @@ int kfMat2Inverse(kfMat_t R, kfMat_t M, kfMat_t t)
 
 	return 0;
 }
-
+//-----------------------------------------------------------------------------
 int kfMat3Inverse(kfMat_t R, kfMat_t M, kfMat_t t)
 {
 	float d = kfMat3Det(M);
