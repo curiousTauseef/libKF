@@ -36,6 +36,7 @@ void kfMatPrint(kfMat_t M)
 {
 	int maxRowLen = 0;
 
+	printf("@ 0x%x\n", (unsigned int)M.col);
 	for(int i = 0; i < M.rows; ++i){
 		char buf[128] = {};
 		int row = 0;

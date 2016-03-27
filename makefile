@@ -2,7 +2,7 @@ CC=gcc
 INC=
 LIB=
 COMP_HDR=./src/kf.h ./src/kfMath.h
-FLAGS=-std=c99 -Wall -Werror -fpic
+FLAGS=-std=c99 -Wall -Werror -fpic -g
 SRC=$(wildcard ./src/*.c)
 LINK=
 OBJS=$(SRC:.c=.o)

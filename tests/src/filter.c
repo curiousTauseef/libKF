@@ -63,7 +63,7 @@ int test(void)
 
 	int minMax[2] = { -200, 200 };
 
-	while(t < M_PI * 4){
+	while(t < M_PI * 2){
 		float reading = (cos( t ) * target) + noise();
 		float m[] = {
 				reading,
