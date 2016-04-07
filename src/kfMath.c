@@ -33,7 +33,7 @@ void kfVecCross(float* r, float* v1, float* v2, int dims)
 	r[2] = v1[0] * v2[1] - v1[1] * v2[0];
 }
 //-----------------------------------------------------------------------------
-float kfDot(float* v1, float* v2,int len)
+float kfVecDot(float* v1, float* v2,int len)
 {
 	float d = 0;
 	for(;len--; d += v1[len] * v2[len]);
@@ -145,7 +145,7 @@ void kfMatTranspose(kfMat_t R, kfMat_t M)
 void kfMatNormalize(kfMat_t R, kfMat_t M)
 {
 	for(int i = M.cols; i--;){
-		float lenSqr = kfDot(M.col[i], M.col[i], M.rows);
+		float lenSqr = kfVecDot(M.col[i], M.col[i], M.rows);
 		kfVecScl(R.col[i], M.col[i], 1.0f / sqrtf(lenSqr), M.rows);
 	}
 }

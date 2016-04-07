@@ -17,7 +17,7 @@ extern void kfVecAdd(float* r, float* v1, float* v2, int dims);
 extern void kfVecSub(float* r, float* v1, float* v2, int dims);
 extern void kfVecScl(float* r, float* v, float s, int dims);
 extern void kfVecCross(float* r, float* v1, float* v2, int dims);
-extern float kfDot(float* v1, float* v2, int len);
+extern float kfVecDot(float* v1, float* v2, int len);
 extern void kfMatPrint(kfMat_t M);
 extern kfMat_t kfMatAlloc(int cols, int rows);
 extern kfMat_t kfMatWithCols(float* col, int cols, int rows);
