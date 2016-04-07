@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 #include "kfMath.h"
 
@@ -16,6 +17,13 @@ void kfVecSub(float* r, float* v1, float* v2,int dims)
 	for(;dims--;){
 		r[dims] = v1[dims] - v2[dims];
 	}
+}
+//-----------------------------------------------------------------------------
+void kfVecScl(float* r, float* v, float s, int dims)
+{
+	for(;dims--;){
+		r[dims] = v[dims] * s;
+	}	
 }
 //-----------------------------------------------------------------------------
 void kfVecCross(float* r, float* v1, float* v2, int dims)
@@ -131,6 +139,14 @@ void kfMatTranspose(kfMat_t R, kfMat_t M)
 		for(int j = R.rows; j--;){
 			R.col[i][j] = M.col[j][i];
 		}
+	}
+}
+//-----------------------------------------------------------------------------
+void kfMatNormalize(kfMat_t R, kfMat_t M)
+{
+	for(int i = M.cols; i--;){
+		float lenSqr = kfDot(M.col[i], M.col[i], M.rows);
+		kfVecScl(R.col[i], M.col[i], 1.0f / sqrtf(lenSqr), M.rows);
 	}
 }
 //-----------------------------------------------------------------------------
