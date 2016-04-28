@@ -7,6 +7,8 @@ SRC=$(wildcard ./src/*.c)
 LINK=
 OBJS=$(SRC:.c=.o)
 
+OS := $(shell uname)
+
 all: library
 
 install: library
@@ -14,7 +16,10 @@ install: library
 	cat $(COMP_HDR) >> ./include/kf.h
 	cp ./include/kf.h /usr/local/include/
 	cp ./lib/libKF.so /usr/local/lib/
+ifeq ($(OS),Darwin)
+else
 	cp ./lib/libKF.so /usr/lib/
+endif
 
 library: $(OBJS)
 	gcc -shared -o ./lib/libKF.so $(OBJS)
