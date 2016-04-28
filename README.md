@@ -71,3 +71,4 @@ After many iterations `state` will gradually approach 100. If the convergence of
   |**
   *0% 
 ```
+You can find a full, single file example [here](https://gist.github.com/mrpossoms/772681d7b9b822125a91b54a2cf66997).
