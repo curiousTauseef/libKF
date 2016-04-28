@@ -29,7 +29,8 @@ if(kfCreateFilter(&filter, 1)){
 
 Next, we set the statistical traits of the system. Here we set the measurement noise co-variance matrix (matR) and the process noise co-variance matrix (matQ).
 ```C
-	filter.matR.col[0][0] = 1;
+	filter.matB.col[0][0] = 0; // No controls inputs exist in this example.
+	filter.matR.col[0][0] = 10;
 	filter.matQ.col[0][0] = 0.001;
 ```
 Since this example only has a single dimension, all of these matrices only have a single row and column. All matrices in the filter are initialized to the identity. Other matrices availabe for you to customize include the following.
@@ -43,7 +44,7 @@ Next, run the filter. Here we will filter a constat value just for the sake of e
 float state[] = { 0 }; // currently estimated state
 
 while(1){
-	float reading = 1;
+	float reading = 100;
 	float measurement[] = { reading }; 
 	
 	kfPredict(&filter, NULL);
@@ -51,7 +52,7 @@ while(1){
 }
 ```
 
-After many iterations `state` will gradually approach 1. If the convergence of this filter were plotted, it would look like this.
+After many iterations `state` will gradually approach 100. If the convergence of this filter were plotted, it would look like this.
 
 ```
   |200
