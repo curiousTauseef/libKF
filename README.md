@@ -53,4 +53,20 @@ while(1){
 
 After many iterations `state` will gradually approach 1. If the convergence of this filter were plotted, it would look like this.
 
-
+```
+  |200
+  |
+  |
+  |
+  |
+  |
+  |
+  |....................................................
+  |                             ***********************
+  |             ****************
+  |      *******
+  |   ***
+  |  *
+  |**
+  *0% 
+```
